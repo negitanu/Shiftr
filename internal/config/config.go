@@ -6,11 +6,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fast-ip-change/fast-ip-change/pkg/models"
+	"github.com/shiftr/shiftr/pkg/models"
 )
 
 const (
-	configDirName  = "FastIPChange"
+	configDirName  = "Shiftr"
 	configFileName = "settings.json"
 )
 

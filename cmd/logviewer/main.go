@@ -29,13 +29,13 @@ func main() {
 		walk.MsgBox(nil, "エラー", fmt.Sprintf("設定ディレクトリの取得に失敗: %v", err), walk.MsgBoxIconError)
 		return
 	}
-	logDir = filepath.Join(appData, "FastIPChange", "logs")
+	logDir = filepath.Join(appData, "Shiftr", "logs")
 
 	// ログファイル一覧を取得
 	logFiles = getLogFiles()
 
 	err = MainWindow{
-		Title:    "Fast IP Change - ログ",
+		Title:    "Shiftr - ログ",
 		Size:     Size{Width: 900, Height: 600},
 		MinSize:  Size{Width: 600, Height: 400},
 		Layout:   VBox{Margins: Margins{Top: 10, Left: 10, Right: 10, Bottom: 10}},

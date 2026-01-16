@@ -115,7 +115,7 @@ func main() {
 	}
 
 	err := MainWindow{
-		Title:    "Fast IP Change - ルーティングテーブル",
+		Title:    "Shiftr - ルーティングテーブル",
 		Size:     Size{Width: 900, Height: 500},
 		MinSize:  Size{Width: 700, Height: 400},
 		Layout:   VBox{Margins: Margins{Top: 10, Left: 10, Right: 10, Bottom: 10}},

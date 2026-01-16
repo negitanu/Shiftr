@@ -24,7 +24,7 @@ jobs:
 
       - name: Generate resources
         run: |
-          cd cmd/fast-ip-change && rsrc -manifest fast-ip-change.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd cmd/shiftr && rsrc -manifest shiftr.manifest -ico ../../assets/systray.ico -o rsrc.syso
           cd ../settings && rsrc -manifest settings.manifest -ico ../../assets/systray.ico -o rsrc.syso
           cd ../ipstatus && rsrc -manifest ipstatus.manifest -ico ../../assets/systray.ico -o rsrc.syso
           cd ../routetable && rsrc -manifest routetable.manifest -ico ../../assets/systray.ico -o rsrc.syso
@@ -32,7 +32,7 @@ jobs:
 
       - name: Build
         run: |
-          go build -ldflags="-H windowsgui -s -w" -trimpath -o fast-ip-change.exe ./cmd/fast-ip-change
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o shiftr.exe ./cmd/shiftr
           go build -ldflags="-H windowsgui -s -w" -trimpath -o settings.exe ./cmd/settings
           go build -ldflags="-H windowsgui -s -w" -trimpath -o ipstatus.exe ./cmd/ipstatus
           go build -ldflags="-H windowsgui -s -w" -trimpath -o routetable.exe ./cmd/routetable
@@ -41,7 +41,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fast-ip-change-windows
+          name: shiftr-windows
           path: |
             *.exe
             settings.example.json

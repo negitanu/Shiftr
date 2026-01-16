@@ -34,7 +34,7 @@ jobs:
 
       - name: Generate resources
         run: |
-          cd cmd/fast-ip-change && rsrc -manifest fast-ip-change.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd cmd/shiftr && rsrc -manifest shiftr.manifest -ico ../../assets/systray.ico -o rsrc.syso
           cd ../settings && rsrc -manifest settings.manifest -ico ../../assets/systray.ico -o rsrc.syso
           cd ../ipstatus && rsrc -manifest ipstatus.manifest -ico ../../assets/systray.ico -o rsrc.syso
           cd ../routetable && rsrc -manifest routetable.manifest -ico ../../assets/systray.ico -o rsrc.syso
@@ -42,7 +42,7 @@ jobs:
 
       - name: Build
         run: |
-          go build -ldflags="-H windowsgui -s -w" -trimpath -o fast-ip-change.exe ./cmd/fast-ip-change
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o shiftr.exe ./cmd/shiftr
           go build -ldflags="-H windowsgui -s -w" -trimpath -o settings.exe ./cmd/settings
           go build -ldflags="-H windowsgui -s -w" -trimpath -o ipstatus.exe ./cmd/ipstatus
           go build -ldflags="-H windowsgui -s -w" -trimpath -o routetable.exe ./cmd/routetable
@@ -50,7 +50,7 @@ jobs:
 
       - name: Verify build artifacts
         run: |
-          if (Test-Path fast-ip-change.exe) { Write-Host "✓ fast-ip-change.exe exists" } else { Write-Host "✗ fast-ip-change.exe missing"; exit 1 }
+          if (Test-Path shiftr.exe) { Write-Host "✓ shiftr.exe exists" } else { Write-Host "✗ shiftr.exe missing"; exit 1 }
           if (Test-Path settings.exe) { Write-Host "✓ settings.exe exists" } else { Write-Host "✗ settings.exe missing"; exit 1 }
           if (Test-Path ipstatus.exe) { Write-Host "✓ ipstatus.exe exists" } else { Write-Host "✗ ipstatus.exe missing"; exit 1 }
           if (Test-Path routetable.exe) { Write-Host "✓ routetable.exe exists" } else { Write-Host "✗ routetable.exe missing"; exit 1 }
@@ -58,7 +58,7 @@ jobs:
 
       - name: Create release zip
         run: |
-          $zipName = "fast-ip-change-${{ github.ref_name }}.zip"
+          $zipName = "shiftr-${{ github.ref_name }}.zip"
           Compress-Archive -Path *.exe, settings.example.json, README.md, LICENSE -DestinationPath $zipName
           Write-Host "Created: $zipName"
           if (Test-Path $zipName) {
@@ -75,7 +75,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          files: fast-ip-change-${{ github.ref_name }}.zip
+          files: shiftr-${{ github.ref_name }}.zip
           generate_release_notes: true
           draft: false
           prerelease: false

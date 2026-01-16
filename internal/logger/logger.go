@@ -43,13 +43,13 @@ func Init(logLevel string) error {
 		return fmt.Errorf("設定ディレクトリの取得に失敗: %w", err)
 	}
 
-	logDir := filepath.Join(appData, "FastIPChange", logDirName)
+	logDir := filepath.Join(appData, "Shiftr", logDirName)
 	if err := os.MkdirAll(logDir, 0755); err != nil {
 		return fmt.Errorf("ログディレクトリの作成に失敗: %w", err)
 	}
 
 	// ログファイル名は日付ベース
-	logFileName := fmt.Sprintf("fast-ip-change-%s.log", time.Now().Format("2006-01-02"))
+	logFileName := fmt.Sprintf("shiftr-%s.log", time.Now().Format("2006-01-02"))
 	logPath := filepath.Join(logDir, logFileName)
 
 	logFile, err = os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)

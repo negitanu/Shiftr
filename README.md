@@ -1,4 +1,9 @@
-# Fast IP Change
+# Shiftr
+
+![Go Version](https://img.shields.io/badge/Go-1.24-blue?logo=go)
+![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey?logo=windows)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-enabled-brightgreen?logo=github-actions)
 
 Windowsのタスクバー（システムトレイ）に常駐し、指定したIPアドレスに自動でネットワークインターフェースカード（NIC）の設定を変更するアプリケーション。
 
@@ -26,13 +31,13 @@ Windowsのタスクバー（システムトレイ）に常駐し、指定したI
 go mod download
 
 # ビルド
-go build -ldflags="-H windowsgui -s -w" -o fast-ip-change.exe ./cmd/fast-ip-change
+go build -ldflags="-H windowsgui -s -w" -o shiftr.exe ./cmd/shiftr
 ```
 
 ### リリースビルド
 
 ```bash
-go build -ldflags="-H windowsgui -s -w" -trimpath -o fast-ip-change.exe ./cmd/fast-ip-change
+go build -ldflags="-H windowsgui -s -w" -trimpath -o shiftr.exe ./cmd/shiftr
 ```
 
 ## 使用方法
@@ -47,7 +52,7 @@ go build -ldflags="-H windowsgui -s -w" -trimpath -o fast-ip-change.exe ./cmd/fa
 設定ファイルは以下の場所に保存されます：
 
 ```
-%APPDATA%\FastIPChange\settings.json
+%APPDATA%\Shiftr\settings.json
 ```
 
 ### 設定ファイルの構造
@@ -80,7 +85,7 @@ go build -ldflags="-H windowsgui -s -w" -trimpath -o fast-ip-change.exe ./cmd/fa
 ログファイルは以下の場所に保存されます：
 
 ```
-%APPDATA%\FastIPChange\logs\fast-ip-change-YYYY-MM-DD.log
+%APPDATA%\Shiftr\logs\shiftr-YYYY-MM-DD.log
 ```
 
 ## 開発
@@ -88,9 +93,9 @@ go build -ldflags="-H windowsgui -s -w" -trimpath -o fast-ip-change.exe ./cmd/fa
 ### プロジェクト構造
 
 ```
-fast-ip-change/
+Shiftr/
 ├── cmd/
-│   └── fast-ip-change/
+│   └── shiftr/
 │       └── main.go              # エントリーポイント
 ├── internal/
 │   ├── config/
@@ -116,9 +121,15 @@ fast-ip-change/
 
 主要な依存関係：
 
+![systray](https://img.shields.io/badge/systray-v1.2.2-blue)
+![go-toast](https://img.shields.io/badge/go--toast-v0.0.0-blue)
+![uuid](https://img.shields.io/badge/uuid-v1.6.0-blue)
+![walk](https://img.shields.io/badge/walk-v0.0.0-blue)
+![golang.org/x/sys](https://img.shields.io/badge/golang.org%2Fx%2Fsys-v0.20.0-blue)
+
 - `github.com/getlantern/systray` - システムトレイ
-- `github.com/go-ole/go-ole` - COMインターフェース
 - `github.com/go-toast/toast` - Windows通知
+- `github.com/google/uuid` - UUID生成
 - `github.com/lxn/walk` - Windows GUI
 - `golang.org/x/sys/windows` - Windows API
 

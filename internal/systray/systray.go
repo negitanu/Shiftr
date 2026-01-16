@@ -8,11 +8,11 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/fast-ip-change/fast-ip-change/assets"
-	"github.com/fast-ip-change/fast-ip-change/internal/config"
-	"github.com/fast-ip-change/fast-ip-change/internal/logger"
-	"github.com/fast-ip-change/fast-ip-change/internal/network"
-	"github.com/fast-ip-change/fast-ip-change/pkg/models"
+	"github.com/shiftr/shiftr/assets"
+	"github.com/shiftr/shiftr/internal/config"
+	"github.com/shiftr/shiftr/internal/logger"
+	"github.com/shiftr/shiftr/internal/network"
+	"github.com/shiftr/shiftr/pkg/models"
 	"github.com/getlantern/systray"
 	"github.com/go-toast/toast"
 )
@@ -58,8 +58,8 @@ func onReady() {
 	} else {
 		logger.Info("アイコンを設定します", "size", len(iconData))
 		// Windowsでは、アイコンを設定する前にタイトルを設定する必要がある場合がある
-		systray.SetTitle("Fast IP Change")
-		systray.SetTooltip("Fast IP Change - IPアドレスを簡単に切り替え")
+		systray.SetTitle("Shiftr")
+		systray.SetTooltip("Shiftr - IPアドレスを簡単に切り替え")
 		// アイコンを設定
 		systray.SetIcon(iconData)
 		logger.Info("アイコンを正常に設定しました")
@@ -433,7 +433,7 @@ func showNotification(title, message string, success bool) {
 	}
 
 	notification := toast.Notification{
-		AppID:   "Fast IP Change",
+		AppID:   "Shiftr",
 		Title:   title,
 		Message: message,
 	}

@@ -108,7 +108,7 @@ func main() {
 	}
 
 	err := MainWindow{
-		Title:    "Fast IP Change - 現在のネットワーク設定",
+		Title:    "Shiftr - 現在のネットワーク設定",
 		Size:     Size{Width: 1000, Height: 400},
 		MinSize:  Size{Width: 800, Height: 300},
 		Layout:   VBox{Margins: Margins{Top: 10, Left: 10, Right: 10, Bottom: 10}},

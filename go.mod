@@ -1,4 +1,4 @@
-module github.com/fast-ip-change/fast-ip-change
+module github.com/shiftr/shiftr
 
 go 1.24.0
 

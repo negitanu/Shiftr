@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fast-ip-change/fast-ip-change/internal/config"
-	"github.com/fast-ip-change/fast-ip-change/internal/network"
-	"github.com/fast-ip-change/fast-ip-change/pkg/models"
+	"github.com/shiftr/shiftr/internal/config"
+	"github.com/shiftr/shiftr/internal/network"
+	"github.com/shiftr/shiftr/pkg/models"
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
 )
@@ -85,7 +85,7 @@ func main() {
 	}
 
 	err = MainWindow{
-		Title:    "Fast IP Change - 設定",
+		Title:    "Shiftr - 設定",
 		Size:     Size{Width: 800, Height: 600},
 		MinSize:  Size{Width: 600, Height: 500},
 		Layout:   VBox{Margins: Margins{Top: 10, Left: 10, Right: 10, Bottom: 10}},

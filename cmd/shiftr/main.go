@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fast-ip-change/fast-ip-change/internal/config"
-	"github.com/fast-ip-change/fast-ip-change/internal/logger"
-	"github.com/fast-ip-change/fast-ip-change/internal/systray"
-	"github.com/fast-ip-change/fast-ip-change/internal/utils"
+	"github.com/shiftr/shiftr/internal/config"
+	"github.com/shiftr/shiftr/internal/logger"
+	"github.com/shiftr/shiftr/internal/systray"
+	"github.com/shiftr/shiftr/internal/utils"
 )
 
 var (
@@ -23,7 +23,7 @@ func main() {
 	flag.Parse()
 
 	if showVersion {
-		fmt.Printf("Fast IP Change version %s\n", version)
+		fmt.Printf("Shiftr version %s\n", version)
 		os.Exit(0)
 	}
 
@@ -47,7 +47,7 @@ func main() {
 	}
 	defer logger.Close()
 
-	logger.Info("Fast IP Change を起動しました", "version", version)
+	logger.Info("Shiftr を起動しました", "version", version)
 
 	// システムトレイアプリケーションを起動
 	if err := systray.Run(); err != nil {

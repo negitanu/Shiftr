@@ -1,4 +1,4 @@
-# Fast IP Change アプリケーション仕様書
+# Shiftr アプリケーション仕様書
 
 ## 1. プロジェクト概要
 
@@ -68,7 +68,7 @@ Windows のタスクバー（システムトレイ）に常駐し、指定した
 - IP アドレス変更の履歴を記録
 - エラー発生時のログ記録
 - **ログビューア**: `logviewer.exe`でログファイルを表示
-- 日次ログファイル（`fast-ip-change-YYYY-MM-DD.log`）
+- 日次ログファイル（`shiftr-YYYY-MM-DD.log`）
 - ログファイルの選択と表示機能
 
 #### 2.2.3 通知機能
@@ -151,11 +151,11 @@ Windows のタスクバー（システムトレイ）に常駐し、指定した
 #### 4.1.4 プロジェクト構造
 
 ```
-fast-ip-change/
+Shiftr/
 ├── cmd/
-│   ├── fast-ip-change/          # メインアプリケーション（システムトレイ常駐）
+│   ├── shiftr/                  # メインアプリケーション（システムトレイ常駐）
 │   │   ├── main.go
-│   │   ├── fast-ip-change.manifest
+│   │   ├── shiftr.manifest
 │   │   └── rsrc.syso            # 生成されたリソースファイル（アイコン、マニフェスト）
 │   ├── settings/                # 設定管理アプリケーション
 │   │   ├── main.go
@@ -201,13 +201,13 @@ fast-ip-change/
 
 | 実行ファイル         | 説明                                         | 管理者権限 |
 | -------------------- | -------------------------------------------- | ---------- |
-| `fast-ip-change.exe` | メインアプリケーション（システムトレイ常駐） | 必要       |
+| `shiftr.exe`         | メインアプリケーション（システムトレイ常駐） | 必要       |
 | `settings.exe`       | プロファイル設定管理                         | 不要       |
 | `ipstatus.exe`       | NIC 状態表示                                 | 不要       |
 | `routetable.exe`     | ルーティングテーブル表示                     | 不要       |
 | `logviewer.exe`      | ログビューア                                 | 不要       |
 
-**注意**: すべての実行ファイルは、メインアプリケーション（`fast-ip-change.exe`）と同じディレクトリに配置する必要があります。
+**注意**: すべての実行ファイルは、メインアプリケーション（`shiftr.exe`）と同じディレクトリに配置する必要があります。
 
 #### 4.1.6 ビルド要件
 
@@ -232,14 +232,14 @@ make build-all
 
 # 方法2: 手動でビルド
 # リソースファイルの生成
-cd cmd/fast-ip-change && rsrc -manifest fast-ip-change.manifest -ico ../../assets/systray.ico -o rsrc.syso
+cd cmd/shiftr && rsrc -manifest shiftr.manifest -ico ../../assets/systray.ico -o rsrc.syso
 cd cmd/settings && rsrc -manifest settings.manifest -ico ../../assets/systray.ico -o rsrc.syso
 cd cmd/ipstatus && rsrc -manifest ipstatus.manifest -ico ../../assets/systray.ico -o rsrc.syso
 cd cmd/routetable && rsrc -manifest routetable.manifest -ico ../../assets/systray.ico -o rsrc.syso
 cd cmd/logviewer && rsrc -manifest logviewer.manifest -ico ../../assets/systray.ico -o rsrc.syso
 
 # 各アプリケーションのビルド
-go build -ldflags="-H windowsgui -s -w" -trimpath -o fast-ip-change.exe ./cmd/fast-ip-change
+go build -ldflags="-H windowsgui -s -w" -trimpath -o shiftr.exe ./cmd/shiftr
 go build -ldflags="-H windowsgui -s -w" -trimpath -o settings.exe ./cmd/settings
 go build -ldflags="-H windowsgui -s -w" -trimpath -o ipstatus.exe ./cmd/ipstatus
 go build -ldflags="-H windowsgui -s -w" -trimpath -o routetable.exe ./cmd/routetable
@@ -253,8 +253,8 @@ go build -ldflags="-H windowsgui -s -w" -trimpath -o logviewer.exe ./cmd/logview
 
 ### 4.2 データ保存
 
-- 設定ファイル：JSON 形式（`%APPDATA%\FastIPChange\settings.json`）
-- ログファイル：テキスト形式（`%APPDATA%\FastIPChange\logs\`）
+- 設定ファイル：JSON 形式（`%APPDATA%\Shiftr\settings.json`）
+- ログファイル：テキスト形式（`%APPDATA%\Shiftr\logs\`）
 - バックアップ：設定変更前の状態をログに記録（将来のロールバック機能用）
 
 ## 5. UI/UX 仕様
@@ -262,7 +262,7 @@ go build -ldflags="-H windowsgui -s -w" -trimpath -o logviewer.exe ./cmd/logview
 ### 5.1 システムトレイメニュー
 
 ```
-[アイコン] Fast IP Change
+[アイコン] Shiftr
 ├─ 現在のNIC設定を表示
 ├─ 現在のルーティングテーブルを表示
 ├─ ────────────────
@@ -314,7 +314,7 @@ go build -ldflags="-H windowsgui -s -w" -trimpath -o logviewer.exe ./cmd/logview
 
 #### 5.2.3 動作
 
-- 設定ファイル（`%APPDATA%\FastIPChange\settings.json`）を直接読み書き
+- 設定ファイル（`%APPDATA%\Shiftr\settings.json`）を直接読み書き
 - プロファイルの追加・編集・削除時に自動保存
 - メインアプリケーション終了時に設定を再読み込み
 
@@ -394,7 +394,7 @@ systray.Run(onReady, onExit)
 
 func onReady() {
     systray.SetIcon(iconData)
-    systray.SetTitle("Fast IP Change")
+    systray.SetTitle("Shiftr")
 
     // メニュー項目の追加
     mCurrent := systray.AddMenuItem("現在の設定を表示", "")
@@ -475,7 +475,7 @@ func (e *NetworkError) Error() string {
 
 ### 6.5 外部アプリケーションの起動
 
-メインアプリケーション（`fast-ip-change.exe`）から、以下の外部アプリケーションを起動します：
+メインアプリケーション（`shiftr.exe`）から、以下の外部アプリケーションを起動します：
 
 - **settings.exe**: 設定管理アプリケーション
 - **ipstatus.exe**: NIC 状態表示アプリケーション
@@ -715,7 +715,7 @@ go test -bench=. -benchmem
 
 ```bash
 # プロジェクトの初期化
-go mod init github.com/yourusername/fast-ip-change
+go mod init github.com/shiftr/shiftr
 
 # 依存関係の追加
 go get github.com/getlantern/systray

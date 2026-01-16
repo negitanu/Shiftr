@@ -6,8 +6,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/fast-ip-change/fast-ip-change/internal/logger"
-	"github.com/fast-ip-change/fast-ip-change/pkg/models"
+	"github.com/shiftr/shiftr/internal/logger"
+	"github.com/shiftr/shiftr/pkg/models"
 )
 
 // Windows プロセス作成フラグ
