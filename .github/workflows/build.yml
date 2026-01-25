@@ -17,7 +17,9 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version-file: "go.mod"
+          cache: true
+          cache-dependency-path: go.sum
 
       - name: Install rsrc
         run: go install github.com/akavel/rsrc@latest
@@ -57,7 +59,25 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version-file: "go.mod"
+          cache: true
+          cache-dependency-path: go.sum
 
-      - name: Test
-        run: go test ./...
+      - name: Test (with coverage)
+        run: |
+          go test ./internal/... ./pkg/... -coverprofile=coverage.out
+          $cov = (go tool cover -func=coverage.out)
+          $cov | Out-File -FilePath coverage.txt -Encoding utf8
+          "## Coverage" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "```" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          $cov | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "```" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: |
+            coverage.out
+            coverage.txt
+          retention-days: 7

@@ -51,7 +51,8 @@ test:
 
 # テスト（カバレッジ）
 test-coverage:
-	go test -cover ./...
+	go test ./internal/... ./pkg/... -coverprofile=coverage.out
+	go tool cover -func=coverage.out
 
 # 依存関係の更新
 deps:

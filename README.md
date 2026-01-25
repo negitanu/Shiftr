@@ -30,14 +30,27 @@ Windowsのタスクバー（システムトレイ）に常駐し、指定したI
 # 依存関係の取得
 go mod download
 
-# ビルド
-go build -ldflags="-H windowsgui -s -w" -o shiftr.exe ./cmd/shiftr
+# rsrcツールのインストール（アイコン/マニフェスト埋め込み用）
+go install github.com/akavel/rsrc@latest
+
+# リソース生成
+make rsrc
+
+# Windows向けビルド（Windows上で実行する場合）
+go build -ldflags="-H windowsgui -s -w" -trimpath -o shiftr.exe ./cmd/shiftr
+
+# macOS/LinuxからWindows向けにビルドする場合（推奨）
+GOOS=windows GOARCH=amd64 go build -ldflags="-H windowsgui -s -w" -trimpath -o shiftr.exe ./cmd/shiftr
 ```
 
 ### リリースビルド
 
 ```bash
-go build -ldflags="-H windowsgui -s -w" -trimpath -o shiftr.exe ./cmd/shiftr
+# すべての実行ファイルをまとめてビルド（Windows）
+make build-all
+
+# すべての実行ファイルをまとめてビルド（macOS/Linux→Windows）
+make build-cross
 ```
 
 ## 使用方法

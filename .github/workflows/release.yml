@@ -27,7 +27,9 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.24"
+          go-version-file: "go.mod"
+          cache: true
+          cache-dependency-path: go.sum
 
       - name: Install rsrc
         run: go install github.com/akavel/rsrc@latest
@@ -42,7 +44,7 @@ jobs:
 
       - name: Build
         run: |
-          go build -ldflags="-H windowsgui -s -w" -trimpath -o shiftr.exe ./cmd/shiftr
+          go build -ldflags="-H windowsgui -s -w -X main.version=${{ github.ref_name }}" -trimpath -o shiftr.exe ./cmd/shiftr
           go build -ldflags="-H windowsgui -s -w" -trimpath -o settings.exe ./cmd/settings
           go build -ldflags="-H windowsgui -s -w" -trimpath -o ipstatus.exe ./cmd/ipstatus
           go build -ldflags="-H windowsgui -s -w" -trimpath -o routetable.exe ./cmd/routetable
