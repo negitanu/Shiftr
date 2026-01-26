@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      GOTOOLCHAIN: local
 
     steps:
       - name: Checkout
@@ -17,9 +19,14 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: "go.mod"
+          go-version: "1.24.x"
           cache: true
           cache-dependency-path: go.sum
+
+      - name: Debug Go env
+        run: |
+          go version
+          go env
 
       - name: Install rsrc
         run: go install github.com/akavel/rsrc@latest
@@ -51,6 +58,8 @@ jobs:
 
   test:
     runs-on: windows-latest
+    env:
+      GOTOOLCHAIN: local
 
     steps:
       - name: Checkout
@@ -59,9 +68,14 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: "go.mod"
+          go-version: "1.24.x"
           cache: true
           cache-dependency-path: go.sum
+
+      - name: Debug Go env
+        run: |
+          go version
+          go env
 
       - name: Test (with coverage)
         run: |
