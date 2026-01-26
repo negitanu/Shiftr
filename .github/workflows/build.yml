@@ -80,7 +80,7 @@ jobs:
       - name: Test (with coverage)
         run: |
           go test ./internal/... ./pkg/... -coverprofile=coverage.out
-          $cov = (go tool cover -func=coverage.out)
+          $cov = go tool cover -func coverage.out
           $cov | Out-File -FilePath coverage.txt -Encoding utf8
           "## Coverage" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           '```' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
