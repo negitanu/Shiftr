@@ -1,0 +1,89 @@
+name: Release (Manual)
+
+# 手動リリース用（release-please を使わない場合）
+# GitHub Actions の "Run workflow" から実行
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    env:
+      GOTOOLCHAIN: local
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 全履歴を取得（リリースノート生成のため）
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.x"
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Debug Go env
+        run: |
+          go version
+          go env
+
+      - name: Install rsrc
+        run: go install github.com/akavel/rsrc@latest
+
+      - name: Generate resources
+        run: |
+          cd cmd/shiftr && rsrc -manifest shiftr.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd ../settings && rsrc -manifest settings.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd ../ipstatus && rsrc -manifest ipstatus.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd ../routetable && rsrc -manifest routetable.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd ../logviewer && rsrc -manifest logviewer.manifest -ico ../../assets/systray.ico -o rsrc.syso
+
+      - name: Build
+        run: |
+          go build -ldflags="-H windowsgui -s -w -X main.version=${{ inputs.version }}" -trimpath -o shiftr.exe ./cmd/shiftr
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o settings.exe ./cmd/settings
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o ipstatus.exe ./cmd/ipstatus
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o routetable.exe ./cmd/routetable
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o logviewer.exe ./cmd/logviewer
+
+      - name: Verify build artifacts
+        run: |
+          if (Test-Path shiftr.exe) { Write-Host "✓ shiftr.exe exists" } else { Write-Host "✗ shiftr.exe missing"; exit 1 }
+          if (Test-Path settings.exe) { Write-Host "✓ settings.exe exists" } else { Write-Host "✗ settings.exe missing"; exit 1 }
+          if (Test-Path ipstatus.exe) { Write-Host "✓ ipstatus.exe exists" } else { Write-Host "✗ ipstatus.exe missing"; exit 1 }
+          if (Test-Path routetable.exe) { Write-Host "✓ routetable.exe exists" } else { Write-Host "✗ routetable.exe missing"; exit 1 }
+          if (Test-Path logviewer.exe) { Write-Host "✓ logviewer.exe exists" } else { Write-Host "✗ logviewer.exe missing"; exit 1 }
+
+      - name: Create release zip
+        run: |
+          $zipName = "shiftr-${{ inputs.version }}.zip"
+          Compress-Archive -Path *.exe, settings.example.json, README.md, LICENSE -DestinationPath $zipName
+          Write-Host "Created: $zipName"
+          if (Test-Path $zipName) {
+            $size = (Get-Item $zipName).Length
+            Write-Host "Zip size: $size bytes"
+          } else {
+            Write-Host "✗ Zip file not created"; exit 1
+          }
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ inputs.version }}
+          name: Release ${{ inputs.version }}
+          files: shiftr-${{ inputs.version }}.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false

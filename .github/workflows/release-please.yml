@@ -1,0 +1,74 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Release Please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          release-type: go
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-release:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: windows-latest
+    env:
+      GOTOOLCHAIN: local
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.24.x"
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Install rsrc
+        run: go install github.com/akavel/rsrc@latest
+
+      - name: Generate resources
+        run: |
+          cd cmd/shiftr && rsrc -manifest shiftr.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd ../settings && rsrc -manifest settings.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd ../ipstatus && rsrc -manifest ipstatus.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd ../routetable && rsrc -manifest routetable.manifest -ico ../../assets/systray.ico -o rsrc.syso
+          cd ../logviewer && rsrc -manifest logviewer.manifest -ico ../../assets/systray.ico -o rsrc.syso
+
+      - name: Build
+        run: |
+          go build -ldflags="-H windowsgui -s -w -X main.version=${{ needs.release-please.outputs.tag_name }}" -trimpath -o shiftr.exe ./cmd/shiftr
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o settings.exe ./cmd/settings
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o ipstatus.exe ./cmd/ipstatus
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o routetable.exe ./cmd/routetable
+          go build -ldflags="-H windowsgui -s -w" -trimpath -o logviewer.exe ./cmd/logviewer
+
+      - name: Create release zip
+        run: |
+          $zipName = "shiftr-${{ needs.release-please.outputs.tag_name }}.zip"
+          Compress-Archive -Path *.exe, settings.example.json, README.md, LICENSE -DestinationPath $zipName
+
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload ${{ needs.release-please.outputs.tag_name }} shiftr-${{ needs.release-please.outputs.tag_name }}.zip --clobber
