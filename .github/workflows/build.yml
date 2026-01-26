@@ -83,9 +83,9 @@ jobs:
           $cov = (go tool cover -func=coverage.out)
           $cov | Out-File -FilePath coverage.txt -Encoding utf8
           "## Coverage" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          "```" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          '```' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
           $cov | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          "```" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          '```' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
